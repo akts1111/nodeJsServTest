@@ -1,8 +1,6 @@
 const express = require('express');
 const app = express();
 
-// 修正箇所: {*:path} を使用
-// 5行目を以下に書き換えてください
 app.all(/^(.*)$/, (req, res) => {
     console.log(`--- [${new Date().toISOString()}] New Request ---`);
     console.log(`Method: ${req.method} | Path: ${req.url}`);
