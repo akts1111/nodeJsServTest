@@ -1,17 +1,7 @@
 {
-  "name": "jsservtest",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "name": "ssrf-test-suite",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "express": "^5.2.1"
+    "start:simple": "node simple-ssrf/server.js",
+    "start:express": "node express-ssrf/server.js"
   }
 }
