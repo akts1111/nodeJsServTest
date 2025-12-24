@@ -16,5 +16,5 @@ app.all(/^(.*)$/, (req, res) => {
 });
 
 app.listen(8080, '0.0.0.0', () => {
-    console.log('Capture Server running on http://127.0.0.1:8080');
+    console.log('Capture Server running on http://0.0.0.0:8080');
 });
