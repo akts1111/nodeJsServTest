@@ -2,6 +2,7 @@
   "name": "ssrf-test-suite",
   "scripts": {
     "start:simple": "node simple-ssrf/server.js",
-    "start:express": "node express-ssrf/server.js"
+    "start:express": "node express-ssrf/server.js",
+    "start:express2": "node express-ssrf/server.js"
   }
 }
