@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 // --- ロギング設定 ---
 // 'dev' または詳細な 'combined' 形式でリクエストをログ出力
