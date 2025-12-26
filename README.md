@@ -17,7 +17,11 @@ npm run start:express2
 http://localhost:3001/admin
 ```
 
+![alt text](image.png)
+
 アクセス監視用(このURLに対するアクセスを監視する)
 ```
 http://localhost:3001/log?test=hello
 ```
+
+![alt text](image-1.png)
