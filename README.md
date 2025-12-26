@@ -1,30 +1,23 @@
-## 起動方法
-### シンプル版
+※以下はローカル環境内での暫定版。ngrokなど公開サーバーに置いた後、修正や手順変更の可能性あり
+
+## 前提条件
+- Node.jsをインストールしていること
+- バージョン[v24.12.0]で動作確認している
+
+## 使用方法
+### 起動方法
+**./nodeJsServTest/** 配下で以下コマンド
 ```
-npm run start:simple
-```
-または
-```
-node simple-ssrf/server.js
+npm run start:express2
 ```
 
-### Express版
+### URL
+管理画面（基本的にこの画面を使用する）
 ```
-npm run start:express
-```
-または
-```
-node express-ssrf/server.js
+http://localhost:3001/admin
 ```
 
-## URL
-### シンプル版
+アクセス監視用(このURLに対するアクセスを監視する)
 ```
-http://localhost:8080/
+http://localhost:3001/log?test=hello
 ```
-
-### Express版
-```
-http://localhost:3000/
-```
-
