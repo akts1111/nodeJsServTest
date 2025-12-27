@@ -9,6 +9,7 @@ app.use(express.text({ type: '*/*' }));
 app.use(express.urlencoded({ extended: true }));
 
 // --- ヘルパー関数 ---
+
 function buildRawRequest(req) {
     let raw = `${req.method} ${req.originalUrl} HTTP/1.1\n`;
     Object.entries(req.headers).forEach(([h, v]) => raw += `${h}: ${v}\n`);
@@ -20,10 +21,22 @@ function buildRawRequest(req) {
 }
 
 function buildRawResponse(res, body) {
-    let raw = `HTTP/1.1 ${res.statusCode} ${res.statusMessage || ''}\n`;
+    let raw = `HTTP/1.1 ${res.statusCode} ${res.statusMessage || 'OK'}\n`;
     const headers = res.getHeaders();
-    Object.entries(headers).forEach(([h, v]) => raw += `${h}: ${v}\n`);
-    raw += '\n' + (typeof body === 'object' ? JSON.stringify(body, null, 2) : body);
+    
+    // Dateヘッダーがまだ生成されていない場合に備えて補完
+    const dateStr = headers['date'] || new Date().toUTCString();
+    raw += `date: ${dateStr}\n`;
+
+    Object.entries(headers).forEach(([h, v]) => {
+        if (h === 'date') return; 
+        raw += `${h}: ${v}\n`;
+    });
+    
+    raw += '\n';
+    if (body !== undefined && body !== null) {
+        raw += typeof body === 'object' ? JSON.stringify(body, null, 2) : body;
+    }
     return raw;
 }
 
@@ -33,17 +46,21 @@ app.use((req, res, next) => {
     if (req.path.startsWith('/admin')) return next();
 
     res.send = function (body) {
-        const logEntry = {
-            id: Date.now(),
-            timestamp: new Date().toLocaleString().replace(/\//g, '-'),
-            ip: req.ip,
-            method: req.method,
-            url: req.originalUrl,
-            rawRequest: buildRawRequest(req),
-            rawResponse: buildRawResponse(res, body)
-        };
-        accessLogs.unshift(logEntry);
-        if (accessLogs.length > 50) accessLogs.pop();
+        try {
+            const logEntry = {
+                id: Date.now(),
+                timestamp: new Date().toLocaleString('ja-JP').replace(/\//g, '-'),
+                ip: req.ip,
+                method: req.method,
+                url: req.originalUrl,
+                rawRequest: buildRawRequest(req),
+                rawResponse: buildRawResponse(res, body)
+            };
+            accessLogs.unshift(logEntry);
+            if (accessLogs.length > 50) accessLogs.pop();
+        } catch (e) {
+            console.error("Logging error:", e);
+        }
         return originalSend.apply(res, arguments);
     };
     next();
@@ -51,10 +68,8 @@ app.use((req, res, next) => {
 
 // --- 管理画面 ---
 app.get('/admin', (req, res) => {
-    // ログごとに「そのログ専用のダウンロード用文字列」を隠し属性として持たせる
-    const logCards = accessLogs.map((l, index) => {
+    const logCards = accessLogs.map((l) => {
         const fullLog = `=== REQUEST ===\n${l.rawRequest}\n\n=== RESPONSE ===\n${l.rawResponse}`;
-        // Base64エンコードしてHTMLに埋め込むことで、JSのパースエラーを回避
         const encodedLog = Buffer.from(fullLog).toString('base64');
 
         return `
@@ -68,8 +83,8 @@ app.get('/admin', (req, res) => {
                 </button>
             </div>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <pre style="background:#2d2d2d; color:#ccc; padding:10px; font-size:11px; overflow-x:auto; white-space:pre-wrap;">${l.rawRequest}</pre>
-                <pre style="background:#2d2d2d; color:#85adad; padding:10px; font-size:11px; overflow-x:auto; white-space:pre-wrap;">${l.rawResponse}</pre>
+                <pre style="background:#2d2d2d; color:#ccc; padding:10px; font-size:11px; overflow-x:auto; white-space:pre-wrap; margin:0;">${l.rawRequest}</pre>
+                <pre style="background:#2d2d2d; color:#85adad; padding:10px; font-size:11px; overflow-x:auto; white-space:pre-wrap; margin:0;">${l.rawResponse}</pre>
             </div>
         </div>`;
     }).join('');
