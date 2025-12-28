@@ -40,7 +40,9 @@ Linux環境を前提とし、ngrokをインストールしておく。
 ```
 curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
 ```
-1) ターミナルを2画面起動しておく。1つ目はSSRF Monitor起動用、2つ目は公開サーバープロセス起動用（ngrok）。  (ngrokはバックグラウンドで動作させることでターミナルを閉じた状態で動かし続けることも可能なようだが、ターミナルでプロセスを落とせば（Ctrl+C）サービスも停止し非公開になるので、このやり方をメモしておく）
+1) ターミナルを2画面起動しておく。1つ目はSSRF Monitor起動用、2つ目は公開サーバープロセス起動用（ngrok）。
+
+  (ngrokはバックグラウンドで動作させることでターミナルを閉じた状態で動かし続けることも可能なようだが、ターミナルでプロセスを落とせば（Ctrl+C）サービスも停止し非公開になるので、このやり方をメモしておく）
 
 ###### ターミナルA：
 2) configにトークンを設定する
