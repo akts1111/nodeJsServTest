@@ -5,7 +5,7 @@
 - バージョン[v24.12.0]で動作確認している
 
 ## 準備
-**./nodeJsServTest/express-ssrf2$** 配下で以下コマンド
+**./nodeJsServTest/express-ssrf2** 配下で以下コマンド
 ```
 # 初期化とモジュールのインポート
 npm init -y && npm install express
